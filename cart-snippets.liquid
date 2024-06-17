@@ -1,0 +1,70 @@
+{% case type %}
+
+    {% when 'timer' %}
+      <div class="timer">
+        <span class="timer-message"> Tu carrito esta muy cerca del envio gratis!</span>
+        <div class="progress-container">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+
+
+    {% when 'product' %}
+
+        <div class="product product-{{ product_id }}">
+
+            <div class="product-image-space">
+                <img class="product-image" loading="lazy" src={{ product_image }} alt="Imagen de Producto">
+            </div>
+
+            <div class="product-description">
+                <input name="id" id="product-item-cart-{{ product_id }}" value="{{ product_id }}" type="hidden" />
+                <a class="product-description-name"  href={{ product_link }}>{{ product_name }}</a>
+                <div class="product-description-info">
+                    <div class="product-description-all">
+                        <div class="product-description-qty">
+                            <button type="button" id="remove-product-{{ product_id }}" class="remove" data-product-id="{{ product_id }}">-</button>
+                            <input type="number" name="updates[]" min="1" step="1" value="{{ product_qty }}" class="input-qty" id="input-qty-{{ product_id }}"/>
+                            <button type="button" id="add-product-{{ product_id }}" class="add" data-product-id="{{ product_id }}">+</button>
+                        </div>
+                        <div class="loading-container" id="loading-container-{{ product_id }}">
+                            <div class="loading-bar">
+                                <div class="inner-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-description-price">
+                        <span id="product-price-{{ product_id }}">{{ product_price | money_with_currency }}</span>
+                        <button class="erase-product" type="button" data-product-id="{{ product_id }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M1 6h22"></path><path d="M4 6l1-4h14l1 4"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} <hr class="divider"> {% endcomment %}
+
+    {% when 'product-recomended' %}
+
+        <div class="product recomended-product" id="product-{{ product_id }}-recomended">
+            <div class="product-image-space">
+                <img class="product-image" id="product-image-{{ product_id }}-recomended" loading="lazy" src="{{ product_image }}" alt="Imagen de Producto">
+            </div>
+            <div class="product-description">
+                <input id="product-recommended-{{ product_id }}" name="id" value="{{ product_id }}" type="hidden" />
+                <a class="product-description-name recomended-text" id="product-name-{{ product_id }}-recomended" href="{{ product_link }}">{{ product_name }}</a>
+                <div class="product-description-info">
+                    <div class="product-description-qty">
+                        <button type="button" id="remove-product-{{ product_id }}-recomended" class="remove-recomended" data-product-id="{{ product_id }}">-</button>
+                        <input type="number" name="quantity" min="1" step="1" value="1" class="input-qty" id="input-qty-{{ product_id }}-recomended"/>
+                        <button type="button" id="add-product-{{ product_id }}-recomended" class="add-recomended" data-product-id="{{ product_id }}">+</button>
+                    </div>
+                    <div class="product-description-price">
+                        <span id="product-price-{{ product_id }}-recomended">{{ product_price |  money_with_currency}}</span>
+                        <button type="button" data-product-id="{{ product_id }}" class="add-product add-product-recommeded">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endcase %}

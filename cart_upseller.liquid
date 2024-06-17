@@ -1,0 +1,113 @@
+{% if cart %}
+  <form class="shoplist" action="{{ routes.cart_url }}" method="post">
+
+    <div class="title-cart space">
+      <h2>Mi Carrito</h2>
+      <button type="button" id="close-cart">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 44 64"><path d="M0 48.64q0-2.304 1.664-3.968l12.48-12.48-12.48-12.544q-1.664-1.6-1.664-3.904t1.664-3.904 3.904-1.6 3.904 1.6l12.544 12.544 12.48-12.544q1.6-1.6 3.904-1.6t3.904 1.6 1.6 3.904-1.6 3.904l-12.48 12.544 12.48 12.48q1.6 1.664 1.6 3.968t-1.6 3.904-3.904 1.6-3.904-1.6l-12.48-12.48-12.544 12.48q-1.6 1.6-3.904 1.6t-3.904-1.6q-1.664-1.664-1.664-3.904z"></path></svg>
+      </button>
+    </div>
+
+    {% comment %} Timer Space {% endcomment %}
+
+    <!-- <hr class="divider"> -->
+
+    <div class="product-list space">
+
+      {% comment %} Products List {% endcomment %}
+
+      {% comment %}
+      {% for item in cart.items %}
+
+        {% assign product_image_url = item.image | img_url: 'medium' %}
+        {% render "cart-snippets" type: 'product' product_name: item.product.title product_price: item.final_price product_qty: item.quantity, product_image: product_image_url, product_link: item.url,  product_id: item.id %}
+
+
+      {% endfor %} {% endcomment %}
+
+      {% if cart.item_count == 0 %}
+        <div class="text">{{ 'sections.dropdown_cart.empty' | t}}</div>
+      {% endif %}
+
+    </div>
+
+    <!-- <hr class="divider last-part"> -->
+
+
+    {% comment %} Cross Sale Space {% endcomment %}
+
+    <div class="recomendation">
+      <span class="youmay">Quizas te pueda gustar</span>
+
+      <div class="recomendation-products">
+
+        <button type="button" class="back-recomended">&#10094;</button>
+
+        {% if cart.item_count == 0 %}
+
+          {% for item in collections['all'].products %}
+
+            {% assign product_image_url = item.featured_image | img_url: 'medium' %}
+            {% render "cart-snippets" type: 'product-recomended' product_name: item.title product_price: item.price, product_image: product_image_url, product_link: item.url, product_id: item.variants[0].id %}
+
+          {% endfor %}
+
+        {% elsif cart.item_count > 0 %}
+
+          {% for item in cart.items %}
+
+            {% assign collec = item.product.collections %}
+            {% assign first_collection = '' %}
+
+            {% for coll in collec %}
+
+              {% if coll.handle != 'all' and coll.handle != 'frontpage' and first_collection == '' %}
+                {% assign first_collection = collection.title %}
+                {% for it in coll.products limit: 5  %}
+
+                  {% assign product_image_url = it.featured_image | img_url: 'medium' %}
+                  {% render "cart-snippets" type: 'product-recomended' product_name: it.title product_price: it.price, product_image: product_image_url, product_link: it.url, product_id: it.variants[0].id %}
+
+                {% endfor %}
+              {% endif %}
+
+
+            {% endfor %}
+
+          {% endfor %}
+
+        {% endif %}
+
+        <button type="button" class="next-recomended">&#10095;</button>
+      </div>
+
+    </div>
+
+
+    <div class="total-cart space last-part">
+      <span class="total-label">Total</span>
+      <span class="total-money">{{ cart.total_price |  money_with_currency }}</span>
+    </div>
+
+    <hr class="divider">
+
+    <div class="actions-cart space">
+      {% comment %} <a href="/cart" class="primary-button">Ver Carrito</a>
+       <a href="/cart" class="cart-button">Ver Carrito</a> {% endcomment %}
+
+      <a href="/cart" class="primary-button">Ver Carrito</a>
+      <input class="primary-button" type="submit" name="checkout" value={{ 'sections.dropdown_cart.checkout' | t}}>
+    </div>
+
+  </form>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Cart UpSeller",
+    "target": "section",
+    "stylesheet": "cart-upseller.css",
+    "javascript": "slider.js",
+    "settings": []
+}
+{% endschema %}
