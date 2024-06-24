@@ -1,55 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   let cartlist = document.querySelector(".shoplist");
-
-  document
-    .getElementById("cart-icon-bubble")
-    .addEventListener("click", function () {
-      updateAllCart();
-      getAllRecomendations();
-      open();
-    });
-
-  document.getElementById("close-cart").addEventListener("click", function () {
-    close();
-  });
-
-  try {
-    document
-      .getElementById("open-when-add")
-      .addEventListener("click", function () {
-        open();
-        setTimeout(() => {
-          updateAllCart();
-          getAllRecomendations();
-        }, "1000");
-      });
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
-    Array.from(
-      document.getElementsByClassName("open-when-add-quickview")
-    ).forEach((button) => {
-      button.addEventListener("click", function () {
-        open();
-        setTimeout(() => {
-          updateAllCart();
-          getAllRecomendations();
-        }, "1000");
-      });
-    });
-  } catch (error) {
-    console.Error(error);
-  }
+  let slideIndex = 2;
 
   function open() {
     cartlist.classList.toggle("open-cart-list");
+    document.body.classList.add('no-scroll');
+    document.getElementById('overlay').classList.add('show');
   }
 
   function close() {
     cartlist.classList.remove("open-cart-list");
+    document.body.classList.remove('no-scroll');
+    document.getElementById('overlay').classList.remove('show');
   }
+
+  document.getElementById('overlay').addEventListener( 'click', function() {
+    close(); 
+  });
 
   const productHTML = (
     product_id,
@@ -68,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <input name="id" id="product-item-cart-${product_id}" value="${product_id}" type="hidden" />
         <a class="product-description-name" href="${product_link}">${product_name}</a>
         <div class="product-description-info">
+            
             <div class="product-description-all">
                 <div class="product-description-qty">
                     <button type="button" id="remove-product-${product_id}" class="remove" data-product-id="${product_id}">-</button>
@@ -79,8 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="inner-bar"></div>
                     </div>
                 </div>
-            </div>
-            <div class="product-description-price">
                 <span id="product-price-${product_id}">$ ${product_price} MXN</span>
                 <button class="erase-product" type="button" data-product-id="${product_id}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
@@ -138,19 +104,50 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateAllCart() {
-    console.log("Entre");
+    
     getAllCartData()
       .then((data) => {
-        console.log(data);
         const items = data.items;
         const total_money = document.querySelector(`.total-money`);
-        total_money.innerHTML = `$ ${data.total_price / 100}`;
+        total_money.innerHTML = `$ ${(data.total_price / 100).toFixed(2)}`;
+
+        /* Min to free shipping */
+
+        let difference = (3000 - (data.total_price / 100));
+        let percentageDifference = 100 - ((difference / 3000) * 100);
+
+        
+        if (difference >= 0) {
+          const progress_bar = document.querySelector('.progress-bar');
+          progress_bar.style.width = `${percentageDifference.toFixed(0)}%`;
+          const money_difference = document.getElementById('timer-message');
+          money_difference.innerHTML = `¡SOLO FALTAN $${difference} PARA ENVÍO GRATIS!`;
+        } else {
+          const progress_bar = document.querySelector('.progress-bar');
+          progress_bar.style.width = `100%`;
+          const money_difference = document.getElementById('timer-message');
+          money_difference.innerHTML = "¡Felicidades! Tienes envío gratis";
+        }
+
+        
+        const count = document.getElementById('cart-item-count-bubble');
+        const total = document.getElementById('cart-total-price-bubble');
+        if (count) {
+          count.innerHTML = data.item_count;
+        }
+
+        if (total) {
+          total.innerHTML = `<span class="money">$ ${data.total_price/100} </span>`;
+        }
+        
 
         if (data.item_count == 0) {
+          var section = document.querySelector(".product-list")
           var div = document.createElement("div");
           div.className = "text";
           div.textContent = "El carrito esta vacio";
-          document.body.appendChild(div);
+          section.innerHTML = "";
+          section.appendChild(div);
         } else {
           const product_list = document.querySelector(`.product-list`);
           product_list.innerHTML = "";
@@ -181,6 +178,144 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  async function getProductRecommendations(id) {
+    const response = await fetch(
+      window.Shopify.routes.root +
+        `recommendations/products.json?product_id=${id}`
+    );
+
+    return response.json();
+  }
+
+  function getAllRecomendations() {
+  
+    getAllCartData()
+    .then((data) => {
+
+      const recommendationsContainer = document.querySelector(
+        ".recommended-products-container"
+      );
+
+      if (data.item_count > 0) {
+
+        recommendationsContainer.innerHTML = "";
+
+        const related_products = data.items;
+
+        related_products.forEach((item) => {
+          getProductRecommendations(item.product_id)
+          .then((recomendationData) => {
+            
+            const recommendation = recomendationData.products;
+            recommendation.forEach((product) => {
+
+              let id = 0;
+              let title = "";
+              let price = 0;
+              let url = "";
+              let image = "";
+
+              // if (product.variants.length == 0){
+              //   id = product.variants[0].id;
+              //   title = product.title;
+              //   price = product.price / 100;
+              //   url = product.url;
+              //   image = product.featured_image;
+              // } else {
+              //   id = product.variants[0].id;
+              //   title = product.title;
+              //   price = product.price / 100;
+              //   url = product.url;
+              //   image = product.featured_image;
+              // }
+
+              id = product.variants[0].id;
+              title = product.title;
+              price = product.price / 100;
+              url = product.url;
+              image = product.featured_image;
+
+              recommendationsContainer.innerHTML += recommendedProduct(
+                id,
+                image,
+                url,
+                title,
+                price
+              );
+            });
+
+            updateListenersRecommended();
+            showSlides(slideIndex);
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+        });
+      } else if (data.item_count == 0){
+
+        recommendationsContainer.innerHTML = "";
+        /* Default Products */
+        getProductRecommendations(4609298104395)
+        .then((recomendationData) => {
+          const recommendation = recomendationData.products;
+          
+          recommendation.forEach((product) => {
+
+            let id = 0;
+            let title = "";
+            let price = 0;
+            let url = "";
+            let image = "";
+
+            // if (product.variants.length == 0){
+            //   id = product.variants[0].id;
+            //   title = product.title;
+            //   price = product.price / 100;
+            //   url = product.url;
+            //   image = product.featured_image;
+            // } else {
+            //   id = product.variants[0].id;
+            //   title = product.title;
+            //   price = product.price / 100;
+            //   url = product.url;
+            //   image = product.featured_image;
+            // }
+
+            id = product.variants[0].id;
+            title = product.title;
+            price = product.price / 100;
+            url = product.url;
+            image = product.featured_image;
+
+            recommendationsContainer.innerHTML += recommendedProduct(
+              id,
+              image,
+              url,
+              title,
+              price
+            );
+          });
+
+          updateListenersRecommended();
+          showSlides(slideIndex);
+
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+      }
+
+      // showSlides(slideIndex);
+      // currentSlide(1);
+
+      
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+      
+  }
+
   async function deleteCartElement(id) {
     let updates = {
       id: id,
@@ -206,7 +341,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function addCartElement(id) {
     const qty = document.getElementById(`input-qty-${id}-recomended`);
-
+   
     const formData = {
       items: [
         {
@@ -257,9 +392,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  let slideIndex = 1;
-  showSlides(slideIndex);
-
   document
     .querySelector(".next-recomended")
     .addEventListener("click", function () {
@@ -285,6 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function showSlides(n) {
     let i;
     let slides = document.getElementsByClassName("recomended-product");
+   
     if (n > slides.length) {
       slideIndex = 1;
     }
@@ -298,10 +431,9 @@ document.addEventListener("DOMContentLoaded", function () {
     slides[slideIndex - 1].style.display = "flex";
   }
 
-  currentSlide(1);
-
   /* Listeners for line items in cart */
   function updateListeners() {
+
     Array.from(document.getElementsByClassName("add")).forEach((button) => {
       const product_id = button.getAttribute("data-product-id");
       button.addEventListener("click", function () {
@@ -364,10 +496,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     );
 
+  }
+
+  function updateListenersRecommended(){
     /* Listeners for Recomended Products */
 
-    Array.from(document.getElementsByClassName("add-recomended")).forEach(
-      (button) => {
+    
+
+    Array.from(document.getElementsByClassName("add-recomended")).forEach((button) => {
         const product_id = button.getAttribute("data-product-id");
         button.addEventListener("click", function () {
           const tag = document.getElementById(
@@ -378,8 +514,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     );
 
-    Array.from(document.getElementsByClassName("remove-recomended")).forEach(
-      (button) => {
+    Array.from(document.getElementsByClassName("remove-recomended")).forEach((button) => {
         const product_id = button.getAttribute("data-product-id");
         button.addEventListener("click", function () {
           const tag = document.getElementById(
@@ -392,9 +527,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     );
 
-    Array.from(
-      document.getElementsByClassName("add-product-recommeded")
-    ).forEach((button) => {
+    Array.from(document.getElementsByClassName("add-product-recommeded")).forEach((button) => {
       const product_id = button.getAttribute("data-product-id");
 
       button.addEventListener("click", function () {
@@ -402,57 +535,57 @@ document.addEventListener("DOMContentLoaded", function () {
           plusSlides(1);
 
           updateAllCart();
-          updateListeners();
         });
       });
     });
   }
 
-  async function getProductRecommendations(id) {
-    const response = await fetch(
-      window.Shopify.routes.root +
-        `recommendations/products.json?product_id=${id}`
-    );
 
-    return response.json();
-  }
+  // updateAllCart();
+  // getAllRecomendations();
 
-  function getAllRecomendations() {
-    console.log("Recomendations");
-    getAllCartData().then((data) => {
-      const recommendationsContainer = document.querySelector(
-        ".recommended-products-container"
-      );
-      recommendationsContainer.innerHTML = "";
+  console.log('cart-loaded');
 
-      const related_products = data.items;
-      related_products.forEach((item) => {
-        getProductRecommendations(item.product_id).then((recomendationData) => {
-          const recommendation = recomendationData.products;
-
-          recommendation.forEach((product) => {
-            const id = product.id;
-            const title = product.title;
-            const price = product.price / 100;
-            const url = product.url;
-            const image = product.featured_image;
-
-            recommendationsContainer.innerHTML += recommendedProduct(
-              id,
-              image,
-              url,
-              title,
-              price
-            );
-          });
-        });
-      });
+  document
+    .getElementById("cart-icon-bubble")
+    .addEventListener("click", function () {
+      updateAllCart();
+      getAllRecomendations();
+      open();
     });
 
-    showSlides(1);
+  document.getElementById("close-cart").addEventListener("click", function () {
+    close();
+  });
 
-    updateListeners();
+  try {
+    document
+      .getElementById("open-when-add")
+      .addEventListener("click", function () {
+        open();
+        setTimeout(() => {
+          updateAllCart();
+          getAllRecomendations();
+        }, "1000");
+      });
+  } catch (error) {
+    console.error(error);
   }
 
-  updateListeners();
+  try {
+    Array.from(
+      document.getElementsByClassName("open-when-add-quickview")
+    ).forEach((button) => {
+      button.addEventListener("click", function () {
+        open();
+        setTimeout(() => {
+          updateAllCart();
+          getAllRecomendations();
+        }, "1000");
+      });
+    });
+  } catch (error) {
+    console.Error(error);
+  }
+  
 });

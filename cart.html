@@ -1,6 +1,15 @@
-{% if cart %}
-  <div class="overlay" id="overlay"></div>
-  <form class="shoplist" action="{{ routes.cart_url }}" method="post">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cart-upseller.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="overlay" id="overlay"></div>
+  <form class="shoplist open-cart-list" action="{{ routes.cart_url }}" method="post">
 
     <div class="title-cart">
       <h2>Mi carrito</h2>
@@ -55,14 +64,7 @@
     </div>
 
   </form>
-{% endif %}
 
-{% schema %}
-{
-    "name": "Cart UpSeller",
-    "target": "section",
-    "stylesheet": "cart-upseller.css",
-    "javascript": "slider.js",
-    "settings": []
-}
-{% endschema %}
+  <script src="slider-two.js"></script>
+</body>
+</html>
