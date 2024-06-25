@@ -47,20 +47,20 @@
 
         <div class="product recomended-product" id="product-{{ product_id }}-recomended">
             <div class="product-image-space">
-                <img class="product-image" id="product-image-{{ product_id }}-recomended" loading="lazy" src="{{ product_image }}" alt="Imagen de Producto">
+                <img class="product-image" id="product-image-{{ product_id }}-recomended" loading="lazy" src={{ product_image }}>
             </div>
             <div class="product-description">
-                <input id="product-recommended-{{ product_id }}" name="id" value="{{ product_id }}" type="hidden" />
-                <a class="product-description-name recomended-text" id="product-name-{{ product_id }}-recomended" href="{{ product_link }}">{{ product_name }}</a>
+                <input id="product-recommended-{{ product_id }}" name="id" value={{ product_id }} type="hidden" />
+                <a class="product-description-name recomended-text" id="product-name-{{ product_id }}-recomended" href={{ product_link }}>{{ product_name }}</a>
                 <div class="product-description-info">
                     <div class="product-description-qty">
-                        <button type="button" id="remove-product-{{ product_id }}-recomended" class="remove-recomended" data-product-id="{{ product_id }}">-</button>
+                        <button type="button" id="remove-product-{{ product_id }}-recomended" class="remove-recomended-collection" data-product-id={{ product_id }}>-</button>
                         <input type="number" name="quantity" min="1" step="1" value="1" class="input-qty" id="input-qty-{{ product_id }}-recomended"/>
-                        <button type="button" id="add-product-{{ product_id }}-recomended" class="add-recomended" data-product-id="{{ product_id }}">+</button>
+                        <button type="button" id="add-product-{{ product_id }}-recomended" class="add-recomended-collection" data-product-id={{ product_id }}>+</button>
                     </div>
                     <div class="product-description-price">
-                        <span id="product-price-{{ product_id }}-recomended">{{ product_price |  money_with_currency}}</span>
-                        <button type="button" data-product-id="{{ product_id }}" class="add-product add-product-recommeded">Agregar</button>
+                        <span id="product-price-{{ product_id }}-recomended">{{ product_price | money_with_currency }} MXN</span>
+                        <button type="button" data-product-id="{{ product_id }}" class="add-product add-product-recommeded-colletion">Agregar</button>
                     </div>
                 </div>
             </div>

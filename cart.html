@@ -9,62 +9,144 @@
 <body>
     
     <div class="overlay" id="overlay"></div>
-  <form class="shoplist open-cart-list" action="{{ routes.cart_url }}" method="post">
+    <form class="shoplist open-cart-list" action="{{ routes.cart_url }}" method="post">
 
-    <div class="title-cart">
-      <h2>Mi carrito</h2>
-      <button type="button" id="close-cart">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 44 64"><path d="M0 48.64q0-2.304 1.664-3.968l12.48-12.48-12.48-12.544q-1.664-1.6-1.664-3.904t1.664-3.904 3.904-1.6 3.904 1.6l12.544 12.544 12.48-12.544q1.6-1.6 3.904-1.6t3.904 1.6 1.6 3.904-1.6 3.904l-12.48 12.544 12.48 12.48q1.6 1.664 1.6 3.968t-1.6 3.904-3.904 1.6-3.904-1.6l-12.48-12.48-12.544 12.48q-1.6 1.6-3.904 1.6t-3.904-1.6q-1.664-1.664-1.664-3.904z"></path></svg>
-      </button>
-    </div>
-
-    <div class="timer">
-        <span class="timer-message" id="timer-message"> ¡SOLO FALTAN $<span id="difference-cart">1500</span> PARA ENVÍO GRATIS!</span>
-        <div class="progress-container">
-          <div class="progress-bar">h</div>
+        <div class="title-cart">
+          <h2>Mi carrito</h2>
+          <button type="button" id="close-cart">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 44 64"><path d="M0 48.64q0-2.304 1.664-3.968l12.48-12.48-12.48-12.544q-1.664-1.6-1.664-3.904t1.664-3.904 3.904-1.6 3.904 1.6l12.544 12.544 12.48-12.544q1.6-1.6 3.904-1.6t3.904 1.6 1.6 3.904-1.6 3.904l-12.48 12.544 12.48 12.48q1.6 1.664 1.6 3.968t-1.6 3.904-3.904 1.6-3.904-1.6l-12.48-12.48-12.544 12.48q-1.6 1.6-3.904 1.6t-3.904-1.6q-1.664-1.664-1.664-3.904z"></path></svg>
+          </button>
         </div>
-    </div>
     
-
-    <div class="product-list space">         
-
-    </div>
-
-    <div class="recomendation">
-      <div class="youmay-container">
-        <span class="youmay">Clientes como tú tambien se llevaron</span>
-      </div>
-      <div class="recomendation-products">
-        <button type="button" class="back-recomended">&#10094;</button>
-        <div class="recommended-products-container">
-            
-
+        <div class="timer">
+            <span class="timer-message" id="timer-message"> ¡SOLO FALTAN $<span id="difference-cart">1500</span> PARA ENVÍO GRATIS!</span>
+            <div class="progress-container">
+              <div class="progress-bar">h</div>
+            </div>
         </div>
-        <button type="button" class="next-recomended">&#10095;</button>
-      </div>
-    </div>
-
-
-    <div class="cart-footer">
-        <div class="total-cart">
-            <span class="total-label">Subtotal</span>
-            <span class="total-money">$0.00</span>
+        
+    
+        <div class="product-list space">         
+    
+        </div>
+    
+        <div class="recomendation">
+          <div class="youmay-container">
+            <span class="youmay">Clientes como tú tambien se llevaron</span>
           </div>
+          <div class="recomendation-products">
+    
+            <div class="slider-cart">
+              <button type="button" class="back-recomended">&#10094;</button>
+              <div class="recommended-products-container" id="default">
 
-          <div class="cart-advice">
-            <span> Envío se calcula en pantalla de pago </span>
+                <div class="product recomended-product" id="product-3-recomended">
+                    <div class="product-image-space">
+                        <img class="product-image" id="product-image-3-recomended" loading="lazy" src="https://dummyimage.com/600x400/000/fff" alt="Imagen de Producto">
+                    </div>
+                    <div class="product-description">
+                        <input id="product-recommended-3" name="id" value="3" type="hidden" />
+                        <a class="product-description-name recomended-text" id="product-name-3-recomended" href="https://example.com/product/3">Producto 3</a>
+                        <div class="product-description-info">
+                            <div class="product-description-qty">
+                                <button type="button" id="remove-product-3-recomended" class="remove-recomended" data-product-id="3">-</button>
+                                <input type="number" name="quantity" min="1" step="1" value="1" class="input-qty" id="input-qty-3-recomended"/>
+                                <button type="button" id="add-product-3-recomended" class="add-recomended" data-product-id="3">+</button>
+                            </div>
+                            <div class="product-description-price">
+                                <span id="product-price-3-recomended">$300.00 USD</span>
+                                <button type="button" data-product-id="3" class="add-product add-product-recommeded">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              </div>
+              <button type="button" class="next-recomended">&#10095;</button>
+            </div>
+            
+            <div class="slider-cart">
+              <button type="button" class="back-recomended">&#10094;</button>
+              <div class="recommended-products-container" id="dinamically-1"> 
+                
+                <div class="product recomended-product" id="product-3-recomended">
+                    <div class="product-image-space">
+                        <img class="product-image" id="product-image-3-recomended" loading="lazy" src="https://dummyimage.com/600x400/000/fff" alt="Imagen de Producto">
+                    </div>
+                    <div class="product-description">
+                        <input id="product-recommended-3" name="id" value="3" type="hidden" />
+                        <a class="product-description-name recomended-text" id="product-name-3-recomended" href="https://example.com/product/3">Producto 3</a>
+                        <div class="product-description-info">
+                            <div class="product-description-qty">
+                                <button type="button" id="remove-product-3-recomended" class="remove-recomended" data-product-id="3">-</button>
+                                <input type="number" name="quantity" min="1" step="1" value="1" class="input-qty" id="input-qty-3-recomended"/>
+                                <button type="button" id="add-product-3-recomended" class="add-recomended" data-product-id="3">+</button>
+                            </div>
+                            <div class="product-description-price">
+                                <span id="product-price-3-recomended">$300.00 USD</span>
+                                <button type="button" data-product-id="3" class="add-product add-product-recommeded">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+              </div>
+              <button type="button" class="next-recomended">&#10095;</button>
+            </div>
+    
+            <div class="slider-cart">
+              <button type="button" class="back-recomended">&#10094;</button>
+              <div class="recommended-products-container" id="dinamically-2">    
+                
+                <div class="product recomended-product" id="product-3-recomended">
+                    <div class="product-image-space">
+                        <img class="product-image" id="product-image-3-recomended" loading="lazy" src="https://dummyimage.com/600x400/000/fff" alt="Imagen de Producto">
+                    </div>
+                    <div class="product-description">
+                        <input id="product-recommended-3" name="id" value="3" type="hidden" />
+                        <a class="product-description-name recomended-text" id="product-name-3-recomended" href="https://example.com/product/3">Producto 3</a>
+                        <div class="product-description-info">
+                            <div class="product-description-qty">
+                                <button type="button" id="remove-product-3-recomended" class="remove-recomended" data-product-id="3">-</button>
+                                <input type="number" name="quantity" min="1" step="1" value="1" class="input-qty" id="input-qty-3-recomended"/>
+                                <button type="button" id="add-product-3-recomended" class="add-recomended" data-product-id="3">+</button>
+                            </div>
+                            <div class="product-description-price">
+                                <span id="product-price-3-recomended">$300.00 USD</span>
+                                <button type="button" data-product-id="3" class="add-product add-product-recommeded">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+              </div>
+              <button type="button" class="next-recomended">&#10095;</button>
+            </div>
+            
           </div>
-      
-          <!-- <hr class="divider"> -->
-      
-          <div class="actions-cart">
-            <a href="/cart" class="primary-button">Ver carrito</a>
-            <input class="primary-button" type="submit" name="checkout" value={{ 'sections.dropdown_cart.checkout' | t}}>
-          </div>
-    </div>
+        </div>
+    
+    
+        <div class="cart-footer">
+            <div class="total-cart">
+                <span class="total-label">Subtotal</span>
+                <span class="total-money">$0.00</span>
+              </div>
+    
+              <div class="cart-advice">
+                <span> Envío se calcula en pantalla de pago </span>
+              </div>
+          
+              <!-- <hr class="divider"> -->
+          
+              <div class="actions-cart">
+                <a href="/cart" class="primary-button">Ver carrito</a>
+                <input class="primary-button" type="submit" name="checkout" value={{ 'sections.dropdown_cart.checkout' | t}}>
+              </div>
+        </div>
+    
+      </form>
 
-  </form>
-
-  <script src="slider-two.js"></script>
+  <!-- <script src="slider-two.js"></script> -->
 </body>
 </html>

@@ -1,6 +1,6 @@
 {% if cart %}
   <div class="overlay" id="overlay"></div>
-  <form class="shoplist" action="{{ routes.cart_url }}" method="post">
+  <form class="shoplist open-cart-list" action="{{ routes.cart_url }}" method="post">
 
     <div class="title-cart">
       <h2>Mi carrito</h2>
@@ -26,12 +26,41 @@
         <span class="youmay">Clientes como tú tambien se llevaron</span>
       </div>
       <div class="recomendation-products">
-        <button type="button" class="back-recomended">&#10094;</button>
-        <div class="recommended-products-container">
-            
 
+        <div class="slider-cart">
+          <button type="button" class="back-recomended">&#10094;</button>
+          <div class="recommended-products-container" id="default-cart-recomended">
+
+            {% for i in (1..10) %}
+              {% assign max = 50 %}
+              {% assign random_number = "now" | date: "%N" | modulo: max | plus: 0 %}
+              {% assign product = collections['Outlet'].products[random_number] %}
+          
+              {% assign product_image_url = item.featured_image | img_url: 'medium' %}
+              {%  render 'cart-snippets' type: 'product-recomended' product_name: item.title product_price: item.price, product_image: product_image_url product_link: item.url product_id: item.variants[0].id %}  %}
+          
+            {% endfor %}
+
+          </div>
+          <button type="button" class="next-recomended">&#10095;</button>
         </div>
-        <button type="button" class="next-recomended">&#10095;</button>
+        
+        <div class="slider-cart">
+          <button type="button" class="back-recomended">&#10094;</button>
+          <div class="recommended-products-container" id="dinamically-1">          
+
+          </div>
+          <button type="button" class="next-recomended">&#10095;</button>
+        </div>
+
+        <div class="slider-cart">
+          <button type="button" class="back-recomended">&#10094;</button>
+          <div class="recommended-products-container" id="dinamically-2">          
+
+          </div>
+          <button type="button" class="next-recomended">&#10095;</button>
+        </div>
+        
       </div>
     </div>
 

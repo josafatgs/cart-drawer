@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
   let cartlist = document.querySelector(".shoplist");
-  let slideIndex = 2;
 
   function open() {
     cartlist.classList.toggle("open-cart-list");
@@ -192,123 +191,176 @@ document.addEventListener("DOMContentLoaded", function () {
     getAllCartData()
     .then((data) => {
 
-      const recommendationsContainer = document.querySelector(
-        ".recommended-products-container"
-      );
+      const recommendationsContainerOne = document.getElementById('dinamically-1');
+      const recommendationsContainerTwo = document.getElementById('dinamically-2');
 
-      if (data.item_count > 0) {
+      recommendationsContainerOne.innerHTML = "";
+      recommendationsContainerTwo.innerHTML = "";
 
-        recommendationsContainer.innerHTML = "";
-
-        const related_products = data.items;
-
-        related_products.forEach((item) => {
-          getProductRecommendations(item.product_id)
-          .then((recomendationData) => {
-            
-            const recommendation = recomendationData.products;
-            recommendation.forEach((product) => {
-
-              let id = 0;
-              let title = "";
-              let price = 0;
-              let url = "";
-              let image = "";
-
-              // if (product.variants.length == 0){
-              //   id = product.variants[0].id;
-              //   title = product.title;
-              //   price = product.price / 100;
-              //   url = product.url;
-              //   image = product.featured_image;
-              // } else {
-              //   id = product.variants[0].id;
-              //   title = product.title;
-              //   price = product.price / 100;
-              //   url = product.url;
-              //   image = product.featured_image;
-              // }
-
-              id = product.variants[0].id;
-              title = product.title;
-              price = product.price / 100;
-              url = product.url;
-              image = product.featured_image;
-
-              recommendationsContainer.innerHTML += recommendedProduct(
-                id,
-                image,
-                url,
-                title,
-                price
-              );
-            });
-
-            updateListenersRecommended();
-            showSlides(slideIndex);
-          })
-          .catch((error) => {
-            console.error(error);
-          })
-        });
-      } else if (data.item_count == 0){
-
-        recommendationsContainer.innerHTML = "";
-        /* Default Products */
-        getProductRecommendations(4609298104395)
-        .then((recomendationData) => {
-          const recommendation = recomendationData.products;
+      if (data.item_count > 0){
+          const products = data.items;
           
-          recommendation.forEach((product) => {
+          
+          products.forEach( (product) => {
+              getProductRecommendations(product.product_id)
+              .then( (relatedProducts) => {
+                  const recommendation = relatedProducts.products;
+                  let AllRecomendations = [];
+                  
+                  recommendation.forEach( (item) => {
+                      if (item.variants[0].available) {
+                          AllRecomendations.push(item);
+                      }
+                  });
 
-            let id = 0;
-            let title = "";
-            let price = 0;
-            let url = "";
-            let image = "";
+                  const middle = AllRecomendations.length / 2;
 
-            // if (product.variants.length == 0){
-            //   id = product.variants[0].id;
-            //   title = product.title;
-            //   price = product.price / 100;
-            //   url = product.url;
-            //   image = product.featured_image;
-            // } else {
-            //   id = product.variants[0].id;
-            //   title = product.title;
-            //   price = product.price / 100;
-            //   url = product.url;
-            //   image = product.featured_image;
-            // }
+                  for (let i = 0; i < middle; i++) {
 
-            id = product.variants[0].id;
-            title = product.title;
-            price = product.price / 100;
-            url = product.url;
-            image = product.featured_image;
+                      const product = AllRecomendations[i];
 
-            recommendationsContainer.innerHTML += recommendedProduct(
-              id,
-              image,
-              url,
-              title,
-              price
-            );
+                      let id = 0;
+                      let title = "";
+                      let price = 0;
+                      let url = "";
+                      let image = "";
+
+                      id = product.variants[0].id;
+                      title = product.title;
+                      price = product.price / 100;
+                      url = product.url;
+                      image = product.featured_image;
+
+                      recommendationsContainerOne.innerHTML += recommendedProduct(
+                          id,
+                          image,
+                          url,
+                          title,
+                          price
+                      );
+
+                      if (i == 0) {
+                        recommendationsContainerOne.firstElementChild.style.display = "flex";
+                      }
+                  }
+
+                  for (let i = middle; i < AllRecomendations.length; i++) {
+                      
+                      const product = AllRecomendations[i];
+
+                      let id = 0;
+                      let title = "";
+                      let price = 0;
+                      let url = "";
+                      let image = "";
+
+                      id = product.variants[0].id;
+                      title = product.title;
+                      price = product.price / 100;
+                      url = product.url;
+                      image = product.featured_image;
+
+                      recommendationsContainerTwo.innerHTML += recommendedProduct(
+                          id,
+                          image,
+                          url,
+                          title,
+                          price
+                      );
+
+                      if (i == middle) {
+                        recommendationsContainerTwo.firstElementChild.style.display = "flex";
+                      }
+                  }
+
+                  updateListenersRecommended();
+              })
+              .catch( (error) => {
+                  console.error(error);
+              });
           });
 
-          updateListenersRecommended();
-          showSlides(slideIndex);
+      } else if(data.item_count == 0) {
+          
+          getProductRecommendations(4609298104395)
+          .then( (relatedProducts) => {
+              const recommendation = relatedProducts.products;
+              let AllRecomendations = [];
+              
+              recommendation.forEach( (item) => {
+                  if (item.variants[0].available) {
+                      AllRecomendations.push(item);
+                  }
+              });
 
-        })
-        .catch((error) => {
-          console.error(error);
-        })
+              const middle = AllRecomendations.length / 2;
+
+              for (let i = 0; i < middle; i++) {
+
+                  const product = AllRecomendations[i];
+
+                  let id = 0;
+                  let title = "";
+                  let price = 0;
+                  let url = "";
+                  let image = "";
+
+                  id = product.variants[0].id;
+                  title = product.title;
+                  price = product.price / 100;
+                  url = product.url;
+                  image = product.featured_image;
+
+                  recommendationsContainerOne.innerHTML += recommendedProduct(
+                      id,
+                      image,
+                      url,
+                      title,
+                      price
+                  );
+
+                  if (i == 0) {
+                    recommendationsContainerOne.firstElementChild.style.display = "flex";
+                  }
+              }
+
+              for (let i = middle; i < AllRecomendations.length; i++) {
+                  
+                  const product = AllRecomendations[i];
+
+                  let id = 0;
+                  let title = "";
+                  let price = 0;
+                  let url = "";
+                  let image = "";
+
+                  id = product.variants[0].id;
+                  title = product.title;
+                  price = product.price / 100;
+                  url = product.url;
+                  image = product.featured_image;
+
+                  recommendationsContainerTwo.innerHTML += recommendedProduct(
+                      id,
+                      image,
+                      url,
+                      title,
+                      price
+                  );
+
+                  if (i == middle) {
+                    recommendationsContainerTwo.firstElementChild.style.display = "flex";
+                  }
+              }
+
+              updateListenersRecommended();
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+
       }
 
-      // showSlides(slideIndex);
-      // currentSlide(1);
-
-      
     })
     .catch((error) => {
       console.error(error);
@@ -392,44 +444,46 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  document
-    .querySelector(".next-recomended")
-    .addEventListener("click", function () {
+  function initSlider(slider, index) {
+
+    const buttonNext = slider.querySelector('.next-recomended');
+    const buttonBack = slider.querySelector('.back-recomended');
+    const sliderBox = slider.querySelector('.recommended-products-container');
+    const slides = sliderBox.children;
+
+    let currentIndex = 0;
+
+    buttonNext.addEventListener( 'click', function () {
       plusSlides(1);
     });
 
-  document
-    .querySelector(".back-recomended")
-    .addEventListener("click", function () {
+    buttonBack.addEventListener('click', function() {
       plusSlides(-1);
     });
 
-  // Next/previous controls
-  function plusSlides(n) {
-    showSlides((slideIndex += n));
-  }
-
-  // Thumbnail image controls
-  function currentSlide(n) {
-    showSlides((slideIndex = n));
-  }
-
-  function showSlides(n) {
-    let i;
-    let slides = document.getElementsByClassName("recomended-product");
-   
-    if (n > slides.length) {
-      slideIndex = 1;
-    }
-    if (n < 1) {
-      slideIndex = slides.length;
-    }
-    for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
+    function plusSlides(n) {
+      showSlides((currentIndex += n))
     }
 
-    slides[slideIndex - 1].style.display = "flex";
+    function showSlides(n) {
+     
+      if (n > slides.length) {
+        currentIndex = 1;
+      }
+      if (n < 1) {
+        currentIndex = slides.length;
+      }
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+  
+      slides[currentIndex - 1].style.display = "flex";
+    }
   }
+
+  Array.from(document.getElementsByClassName('slider-cart')).forEach( (slider, index) => {
+    initSlider(slider, index);
+  });
 
   /* Listeners for line items in cart */
   function updateListeners() {
@@ -501,8 +555,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateListenersRecommended(){
     /* Listeners for Recomended Products */
 
-    
-
     Array.from(document.getElementsByClassName("add-recomended")).forEach((button) => {
         const product_id = button.getAttribute("data-product-id");
         button.addEventListener("click", function () {
@@ -532,13 +584,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
       button.addEventListener("click", function () {
         addCartElement(product_id).then((data) => {
-          plusSlides(1);
-
           updateAllCart();
         });
       });
     });
   }
+
+
+  
+
+  
+  document.getElementById('default-cart-recomended').firstElementChild.style.display = "flex";
+
+
+  Array.from(document.getElementsByClassName("add-recomended-collection")).forEach((button) => {
+    const product_id = button.getAttribute("data-product-id");
+    button.addEventListener("click", function () {
+      const tag = document.getElementById(
+        `input-qty-${product_id}-recomended`
+      );
+      tag.value = parseInt(tag.value) + 1;
+    });
+  }
+);
+
+Array.from(document.getElementsByClassName("remove-recomended-collection")).forEach((button) => {
+    const product_id = button.getAttribute("data-product-id");
+    button.addEventListener("click", function () {
+      const tag = document.getElementById(
+        `input-qty-${product_id}-recomended`
+      );
+      if (tag.value >= 1) {
+        tag.value = parseInt(tag.value) - 1;
+      }
+    });
+  }
+);
+
+Array.from(document.getElementsByClassName("add-product-recommeded-colletion")).forEach((button) => {
+  const product_id = button.getAttribute("data-product-id");
+
+  button.addEventListener("click", function () {
+    addCartElement(product_id)
+    .then((data) => {
+      updateAllCart();
+    })
+    .catch( (error) => {
+      console.log(error);
+    })
+  });
+});
 
 
   // updateAllCart();

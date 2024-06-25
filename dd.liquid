@@ -1,0 +1,9 @@
+{% for i in (1..10) %}
+    {% assign max = 50 %}
+    {% assign random_number = "now" | date: "%N" | modulo: max | plus: 0 %}
+    {% assign product = collections['Outlet'].products[random_number] %}
+
+    {% assign product_image_url = item.featured_image | img_url: 'medium' %}
+    {%  render 'cart-snippets' type: 'product-recomended' product_name: item.title product_price: item.price, product_image: product_image_url product_link: item.url product_id: item.variants[0].id %}  %}
+
+{% endfor %}
